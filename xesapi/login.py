@@ -1,23 +1,8 @@
 from typing import TypedDict, TypeVar, Optional
+from .type import TalToken_Data, Captcha_Data
 from .base import APIException
 from .user import User
 import aiohttp
-
-class TalToken_Data(TypedDict):
-    """
-    TalToken 的内部 data。
-    """
-
-    code: str  # 唯一标识符，可以在 https://login.xueersi.com/V1/Web/getToken 使用。
-    passport_token: str  # 好未来 token，用于 Cookie（tal_id）。
-
-
-class Captcha_Data(TypedDict):
-    """
-    Captcha 的内部 data。
-    """
-
-    captcha: str  # base64 url, data:image\\/jpeg;base64,...
 
 
 T = TypeVar("T")

@@ -1,48 +1,25 @@
-from typing import TypedDict, TypeVar, Optional
+from typing import TypedDict, TypeVar, Optional, Union, TypeAlias
 from http.cookies import SimpleCookie
 from .base import APIException
+from .type import Info_Data
 import aiohttp
-
-
-class Info_Data(TypedDict):
-    """
-    学而思回传的 InfoData。
-    """
-
-    auth: str  # 未知
-    avatar_default: int  # 未知
-    avatar_path: str  # 头像链接
-    avatar_version: str  # 头像上传日期（Unix 时间戳）
-    bussinessline_id: int  # 未知
-    create_time: str  # 账户创建时间
-    email: str  # email
-    en_name: str  # 英文名
-    encrypt_user_id: str  # 未知
-    grade_alias: str  # 别名，参照 grade_id 和 grade_name
-    grade_id: int  # 学历
-    grade_name: str  # 人类可读学历
-    id: str  # 学员 ID
-    name: str  # 同 id
-    nickname: str  # 昵称
-    realname: str  # 真名
-    role: str  # 未知
-    sex: str  # 性别(参照 API 返回结果)
-    status: str  # 未知
-    tal_cg_id: int  # 未知
-    tal_id: str  # 好未来 ID
-    uid: str  # 账户的 UID（不是学员 ID）
-    user_id: str  # 同 id
-    xes_encrypt_uid: str  # 加密了的 UID
-
 
 T = TypeVar("T")
 
 
-class APIResponse(TypedDict):
+class _APIResponse(TypedDict):
     stat: int
     status: int
     msg: str
     data: Optional[T]
+
+
+class _FailedAPIResponse(TypedDict):
+    status_code: int
+    message: str
+
+
+APIResponse: TypeAlias = Union[_APIResponse, _FailedAPIResponse]
 
 
 class User:
@@ -92,6 +69,6 @@ class User:
         ) as session:
             async with session.get("/api/user/info") as req:
                 c: APIResponse[Info_Data] = await req.json()
-                if c["stat"] != 1:
-                    raise APIException(c["msg"])
+                if c["stat"] != 1 or c["data"] == None:
+                    raise APIException(c["message"] if c["msg"] == None else c["msg"])
                 return c["data"]
