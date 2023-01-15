@@ -1,4 +1,8 @@
-from ..xesapi import login, Captcha, User, Info_Data
+# local imports
+import sys
+sys.path.append("..")
+
+from xesapi import login, Captcha, User, Info_Data
 from typing import Union, Callable, Optional
 from customtkinter import CTkFont
 from PIL import Image, ImageTk
@@ -308,4 +312,5 @@ class App(ctk.CTk):
 
 if __name__ == "__main__":
     app = App(asyncio.new_event_loop())
+    app.focus()
     app.mainloop()
