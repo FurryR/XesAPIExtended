@@ -312,5 +312,4 @@ class App(ctk.CTk):
 
 if __name__ == "__main__":
     app = App(asyncio.new_event_loop())
-    app.focus()
     app.mainloop()
